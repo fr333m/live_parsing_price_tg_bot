@@ -1,6 +1,5 @@
 const { createBot } = require('./src/notifier/futures-bot/src/bot');
-const {testRsi} = require('./src/rsi/rsi');
-testRsi();
+
 
 console.log('🚀 Запуск бота...');
 
