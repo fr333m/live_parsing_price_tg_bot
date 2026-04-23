@@ -16,7 +16,7 @@ async function updateCandleForSymbol(interval, symbol) {
 
     console.log(`Processing symbol: ${symbol}`);
 
-    await delay(300);
+    await delay(1000);
 
     const sampleCandles = await bybitClient.getCandles(symbol, interval, 200);
     console.log(`Fetched ${sampleCandles.length} candles for ${symbol}`);
@@ -29,7 +29,7 @@ async function updateCandleForSymbol(interval, symbol) {
 
 async function testRsi() {
 
-    const uniqueSymbols = await bybitClient.getTopTradingVolume(15);
+    const uniqueSymbols = await bybitClient.getTopTradingVolume(25);
 
     for (const symbol of uniqueSymbols) {
         console.log('testRsi() started.');

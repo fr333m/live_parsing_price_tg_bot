@@ -11,7 +11,8 @@ class Config {
     this.BASE_URL = process.env.BASE_URL;
     this.DB_PATH = process.env.DB_PATH;
     this.PROXY_URL = process.env.PROXY_URL;
+    this.RSI_PERIOD = parseInt(process.env.RSI_PERIOD) || 14; // Период для расчета RSI, по умолчанию 14
   }
 }
-
+// Экспортируем экземпляр класса Config, чтобы использовать его в других файлах
 module.exports = new Config();
