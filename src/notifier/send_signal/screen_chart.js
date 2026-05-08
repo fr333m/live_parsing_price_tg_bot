@@ -17,6 +17,8 @@ async function generateChart(symbol, interval, ohlcData) {
         throw new Error('Нет свечей');
     }
 
+    ohlcData.reverse();
+
     const labels = ohlcData.map(c =>
         new Date(c[0]).toLocaleTimeString()
     );
