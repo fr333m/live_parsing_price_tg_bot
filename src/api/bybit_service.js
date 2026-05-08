@@ -4,7 +4,7 @@ const { HttpProxyAgent } = require('http-proxy-agent');
 const { HttpsProxyAgent } = require('https-proxy-agent');
 
 class BybitClient {
-  constructor(apiKey, apiSecret, proxyUrl) {
+  constructor(apiKey = config.BYBIT_API_KEY, apiSecret = config.BYBIT_SECRET_KEY, proxyUrl = config.PROXY_URL) {
     proxyUrl = proxyUrl || config.PROXY_URL; // Allow proxy URL from constructor or environment variable
     const clientConfig = {
       key: apiKey,
@@ -41,7 +41,7 @@ class BybitClient {
    * @param {number} limit - Number of candles to return (1-1000, default 500)
    * @returns {Promise<Array<Array<string>>>} Array of candles: [[startTime, open, high, low, close, volume, turnover], ...]
    */
-  async getCandles(symbol, interval, limit = 500) {
+  async getCandles(symbol, interval, limit = 200) {
     try {
       const response = await this.client.getKline({
         category: 'linear', // For USDT perpetuals; change to 'spot' or 'inverse' if needed
@@ -82,6 +82,25 @@ class BybitClient {
       return sorted;
     } catch (error) {
       console.error('Error fetching top trading volumes:', error);
+      throw error;
+    }
+  }
+
+  async getPrice(symbol) {
+    try {
+      const response = await this.client.getTickers({
+        category: 'linear', // For USDT perpetuals
+        symbol,
+      });
+      if (response.retCode !== 0) {
+        throw new Error(response.retMsg);
+      }
+      if (!response.result.list || response.result.list.length === 0) {
+        throw new Error('No data found for symbol');
+      }
+      return response.result.list[0].lastprice;
+    } catch (error) {
+      console.error('Error fetching price:', error);
       throw error;
     }
   }

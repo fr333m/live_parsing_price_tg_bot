@@ -18,7 +18,7 @@ async function updateCandleForSymbol(interval, symbol) {
 
     await delay(1000);
 
-    const sampleCandles = await bybitClient.getCandles(symbol, interval, 200);
+    const sampleCandles = await bybitClient.getCandles(symbol, interval, 400);
     console.log(`Fetched ${sampleCandles.length} candles for ${symbol}`);
 
     
@@ -27,13 +27,13 @@ async function updateCandleForSymbol(interval, symbol) {
    return sampleCandles;
 }
 
-async function testRsi() {
+async function testRsi(interval, countContracts) {
 
-    const uniqueSymbols = await bybitClient.getTopTradingVolume(25);
+    const uniqueSymbols = await bybitClient.getTopTradingVolume(countContracts);
 
     for (const symbol of uniqueSymbols) {
         console.log('testRsi() started.');
-        const ohlc =  await updateCandleForSymbol('15', symbol.symbol);
+        const ohlc =  await updateCandleForSymbol(interval, symbol.symbol);
   
     console.log(`testRsi() received ${uniqueSymbols.length} symbols for RSI analysis.`);
 
@@ -47,15 +47,12 @@ async function testRsi() {
 
     if (rsiValue > 65 || rsiValue < 35) {
       try {
-        await sendRSItop(symbol.symbol, '15');
+        await sendRSItop(symbol.symbol, interval, ohlc);
       } catch (err) {
         console.error(`Failed to send signal for ${symbol}:`, err.message);
       }
     }
-    console.log(`Symbol: ${symbol.symbol}, RSI: ${rsiValue}, interval: 15m`);
     };
-  
-  console.log('testRsi() finished.');
 }
 
 module.exports = {

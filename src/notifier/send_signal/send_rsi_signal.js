@@ -1,6 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const config = require('../../config/config');
-const { getBybitChartScreenshot } = require('./screen_chart'); // Убедись что путь правильный
+const { generateChart } = require('./screen_chart'); // Убедись что путь правильный
 
 const TELEGRAM_BOT_TOKEN = config.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = config.TELEGRAM_CHAT_ID;
@@ -13,10 +13,10 @@ const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false });
  * @param {string} interval - Таймфрейм (например: 1h, 4h, 1d)
  * @returns {Promise<object>} - Объект с результатом отправки сообщения
  */
- async function sendRSItop(symbol, interval) {
+ async function sendRSItop(symbol, interval, ohlc) {
     try {
         // Получаем скриншот графика от Bybit
-        const screenshotBuffer = await getBybitChartScreenshot(symbol, interval);
+        const screenshotBuffer = await generateChart(symbol, interval, ohlc);
 
         if (!screenshotBuffer) {
             throw new Error('Не удалось получить скриншот графика');
